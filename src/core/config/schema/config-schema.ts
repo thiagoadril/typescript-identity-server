@@ -1,4 +1,4 @@
-import * as Joi from 'joi';
+/*import * as Joi from 'joi';
 
 export class ConfigSchema {
   public SCHEMA: Joi.ObjectSchema;
@@ -9,4 +9,4 @@ export class ConfigSchema {
       PORT: Joi.number().default(3000),
     });
   }
-}
+}*/

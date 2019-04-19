@@ -49,6 +49,16 @@
     express "4.16.4"
     multer "1.4.1"
 
+"@nestjs/platform-fastify@^6.1.1":
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-fastify/-/platform-fastify-6.1.1.tgz#95e48dae59d3278affbee244c7f862fd4f32aaf7"
+  integrity sha512-yhgXC3G95LOz6uMNE0zQs1eE+gMI64C9vBzJDAd0mp+sF/IBSvcm3XkG7Xib/2rc44+PpuGcKEWXGQfRH7uMZw==
+  dependencies:
+    fastify "2.2.0"
+    fastify-cors "2.1.2"
+    fastify-formbody "3.1.0"
+    path-to-regexp "3.0.0"
+
 "@nestjs/testing@^6.0.0":
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-6.1.1.tgz#cc871867f9bd053069467a5a2f1b429945413313"
@@ -1193,6 +1203,11 @@ dot-prop@^4.1.0:
   dependencies:
     is-obj "^1.0.0"
 
+dotenv@^6.1.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.2.0.tgz#941c0410535d942c8becf28d3f357dbd9d476064"
+  integrity sha512-HygQCKUBSFl8wKQZBSemMywRWcEDNidvNbjGVyZu3nbZ8qq9ubiPoGLMdRDpfSrpkkm9BXYFkpKxxFX38o/76w==
+
 duplexer3@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
@@ -1501,7 +1516,7 @@ fast-json-stable-stringify@2.x, fast-json-stable-stringify@^2.0.0:
   resolved "https://registry.yarnpkg.com/fast-json-stable-stringify/-/fast-json-stable-stringify-2.0.0.tgz#d5142c0caee6b1189f87d3a76111064f86c8bbf2"
   integrity sha1-1RQsDK7msRifh9OnYREGT4bIu/I=
 
-fast-json-stringify@^1.15.0:
+fast-json-stringify@^1.11.2, fast-json-stringify@^1.15.0:
   version "1.15.1"
   resolved "https://registry.yarnpkg.com/fast-json-stringify/-/fast-json-stringify-1.15.1.tgz#98678b79e648608863fed7d860f14eace92d497e"
   integrity sha512-2MGfremU4N1lR6J7VpON9FdvaooLrcgqG+VePq3hH+WY3B3fSxz13cVj4QF6D13ipkPvzOG40TPfylivXVzj0g==
@@ -1523,6 +1538,49 @@ fast-safe-stringify@2.0.6, fast-safe-stringify@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/fast-safe-stringify/-/fast-safe-stringify-2.0.6.tgz#04b26106cc56681f51a044cfc0d76cf0008ac2c2"
   integrity sha512-q8BZ89jjc+mz08rSxROs8VsrBBcn1SIw1kq9NjolL509tkABRk9io01RAjSaEv1Xb2uFLt8VtRiZbGp5H8iDtg==
+
+fastify-cors@2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/fastify-cors/-/fastify-cors-2.1.2.tgz#5cafc79b974a73f61136f1871bf59208af06b7b0"
+  integrity sha512-/TEco5naXbM2ob3fSvl8IvbRpM4fBDLnwOZ7KJ5frpgiky8Yv0O8k8W5JE3oc64xfNeVcv/yBkqgRByRPk1ecw==
+  dependencies:
+    fastify-plugin "^1.5.0"
+    vary "^1.1.2"
+
+fastify-formbody@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/fastify-formbody/-/fastify-formbody-3.1.0.tgz#604cdafdb9e3af6068e6d9940985baf692d6e922"
+  integrity sha512-GQQtRmI8w07SMcnXiWrk9H8GAMJwheKAkQS4q0FbJ56Qu8bV39GOffiZ8GLHQmvcJ2B65S+4IAtNjsG6vtMEig==
+  dependencies:
+    fastify-plugin "^1.0.0"
+    qs "^6.5.1"
+
+fastify-plugin@^1.0.0, fastify-plugin@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/fastify-plugin/-/fastify-plugin-1.5.0.tgz#4bea12c54112f4749c17f3a1f17356cbdfa661af"
+  integrity sha512-bXKSTR4Q1lxERf1p/10Aakga570XtcxCCvPR1gby5js1XOtg7E8UV+aHHEPbGowQGV/KVb7ARBROhPk2I4DfBw==
+  dependencies:
+    semver "^5.5.0"
+
+fastify@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/fastify/-/fastify-2.2.0.tgz#55d84bfe8d92d603e83d172b17a88a4ec054e407"
+  integrity sha512-U6W101N+8Hyz2uiN3XqdSdTiaWYiJ0lCJmC3tO42PNttjCZQp8EPIhZ0QkVQWLrrP0ijjgomwaYrj9eMzqWyDw==
+  dependencies:
+    abstract-logging "^1.0.0"
+    ajv "^6.9.2"
+    avvio "^6.1.1"
+    bourne "^1.1.2"
+    fast-json-stringify "^1.11.2"
+    find-my-way "^2.0.0"
+    flatstr "^1.0.9"
+    light-my-request "^3.2.0"
+    middie "^4.0.1"
+    pino "^5.11.1"
+    proxy-addr "^2.0.4"
+    readable-stream "^3.1.1"
+    rfdc "^1.1.2"
+    tiny-lru "^6.0.1"
 
 fastify@^2.3.0:
   version "2.3.0"
@@ -2921,6 +2979,16 @@ locate-path@^2.0.0:
     p-locate "^2.0.0"
     path-exists "^3.0.0"
 
+lodash.get@^4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
+  integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
+
+lodash.set@^4.3.2:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/lodash.set/-/lodash.set-4.3.2.tgz#d8757b1da807dde24816b0d6a84bea1a76230b23"
+  integrity sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=
+
 lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
@@ -3236,6 +3304,18 @@ neo-async@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
+
+nestjs-config@^1.3.21:
+  version "1.3.21"
+  resolved "https://registry.yarnpkg.com/nestjs-config/-/nestjs-config-1.3.21.tgz#d128f0056723fe339e765642dddc66757dc76092"
+  integrity sha512-BUUINtpz+S10ykLZqScQto0vcpzy9Pwh4wM3ORW005HYuAWbZe2RwFDLxPY2DJRF3WueF++JiyMN2d4bcgwrfw==
+  dependencies:
+    dotenv "^6.1.0"
+    glob "^7.1.2"
+    lodash.get "^4.4.2"
+    lodash.set "^4.3.2"
+    reflect-metadata "^0.1.12"
+    rxjs "^6.0.0"
 
 next-tick@1, next-tick@^1.0.0:
   version "1.0.0"
@@ -3605,7 +3685,7 @@ path-to-regexp@0.1.7:
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-0.1.7.tgz#df604178005f522f15eb4490e7247a1bfaa67f8c"
   integrity sha1-32BBeABfUi8V60SQ5yR6G/qmf4w=
 
-path-to-regexp@^3.0.0:
+path-to-regexp@3.0.0, path-to-regexp@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-3.0.0.tgz#c981a218f3df543fa28696be2f88e0c58d2e012a"
   integrity sha512-ZOtfhPttCrqp2M1PBBH4X13XlvnfhIwD7yCLx+GoGoXRPQyxGOTdQMpIzPSPKXAJT/JQrdfFrgdJOyAzvgpQ9A==
@@ -4048,7 +4128,7 @@ rsvp@^3.3.3:
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-3.6.2.tgz#2e96491599a96cde1b515d5674a8f7a91452926a"
   integrity sha512-OfWGQTb9vnwRjwtA2QwpG2ICclHC3pgXZO5xt8H2EfgDquO0qVdSb5T88L4qJVAEugbS56pAuV4XZM58UX8ulw==
 
-rxjs@^6.3.3:
+rxjs@^6.0.0, rxjs@^6.3.3:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.4.0.tgz#f3bb0fe7bda7fb69deac0c16f17b50b0b8790504"
   integrity sha512-Z9Yfa11F6B9Sg/BK9MnqnQ+aQYicPLtilXBp2yUtDt2JRCE0h26d33EnfO3ZxoNxG0T92OUucP3Ct7cpfkdFfw==
@@ -4857,7 +4937,7 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vary@^1, vary@~1.1.2:
+vary@^1, vary@^1.1.2, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=

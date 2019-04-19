@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit, OnApplicationShutdown, Logger, OnApplicationB
 
 @Injectable()
 export class AppService implements OnApplicationBootstrap, OnModuleInit, OnApplicationShutdown {
+
   onApplicationShutdown(signal?: string): any {
     Logger.log(
       'Application shutdown by signal: '
@@ -12,6 +13,8 @@ export class AppService implements OnApplicationBootstrap, OnModuleInit, OnAppli
   }
 
   onApplicationBootstrap(): any {
+    Logger.log('NODE_ENV: ' + process.env.NODE_ENV);
+
     Logger.log(
       'Bootstrap initialized...',
       'onApplicationBootstrap',
