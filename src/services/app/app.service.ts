@@ -1,20 +1,8 @@
-import { Injectable, OnModuleInit, OnApplicationShutdown, Logger, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, Logger, OnApplicationBootstrap, OnApplicationShutdown, OnModuleInit } from '@nestjs/common';
 
 @Injectable()
 export class AppService implements OnApplicationBootstrap, OnModuleInit, OnApplicationShutdown {
-
-  onApplicationShutdown(signal?: string): any {
-    Logger.log(
-      'Application shutdown by signal: '
-        .concat(signal),
-      'onApplicationShutdown',
-      true,
-    );
-  }
-
   onApplicationBootstrap(): any {
-    Logger.log('NODE_ENV: ' + process.env.NODE_ENV);
-
     Logger.log(
       'Bootstrap initialized...',
       'onApplicationBootstrap',
@@ -26,6 +14,15 @@ export class AppService implements OnApplicationBootstrap, OnModuleInit, OnAppli
     Logger.log(
       'Module initialized...',
       'onModuleInit',
+      true,
+    );
+  }
+
+  onApplicationShutdown(signal?: string): any {
+    Logger.log(
+      'Application shutdown by signal: '
+        .concat(signal),
+      'onApplicationShutdown',
       true,
     );
   }
