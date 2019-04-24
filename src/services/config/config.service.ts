@@ -31,7 +31,6 @@ export class ConfigService {
    * Validate Configuration Schema
    * @param envConfig
    */
-
   private static validate(envConfig: EnvConfig): EnvConfig {
     const envVarsSchema: Joi.ObjectSchema = new EnvConfigSchema().Schema;
     const { error, value: validatedEnvConfig } = Joi.validate(
@@ -44,15 +43,26 @@ export class ConfigService {
     return validatedEnvConfig;
   }
 
+  /**
+   * Load configurations
+   */
   public load(): ConfigService {
     const config = dotenv.parse(fs.readFileSync(this.envConfigFile));
     this.envConfig = ConfigService.validate(config);
     this.apiConfig = new ApiConfig(
-      this.getApiEnvironment(),
       this.getApiName(),
       this.getApiVersion(),
+      this.getApiEnvironment(),
+      this.isApiDebug(),
       this.getApiPort(),
       this.isApiAuthEnabled(),
+      this.isApiCorsEnabled(),
+      this.getMongoUri(),
+      this.getMongoReconnectInterval(),
+      this.getMongoPoolSize(),
+      this.getMongoBufferMaxEntries(),
+      this.getMongoConnectTimeOutMS(),
+      this.getMongoSocketTimeOutMS(),
     );
     return this;
   }
@@ -70,6 +80,13 @@ export class ConfigService {
    */
   private getApiEnvironment(): string {
     return this.environment;
+  }
+
+  /**
+   * Verify api debug
+   */
+  private isApiDebug(): boolean {
+    return Boolean(this.getParam('API_AUTH_ENABLED'));
   }
 
   /**
@@ -94,9 +111,58 @@ export class ConfigService {
   }
 
   /**
-   * Verify authentication status
+   * Verify authentication enable/disable
    */
   private isApiAuthEnabled(): boolean {
     return Boolean(this.getParam('API_AUTH_ENABLED'));
+  }
+
+  /**
+   * Verify cors enable/disable
+   */
+  private isApiCorsEnabled(): boolean {
+    return Boolean(this.getParam('API_CORS_ENABLE'));
+  }
+
+  /**
+   * Get MongoDB URI
+   */
+  private getMongoUri(): string {
+    return String(this.getParam('MONGO_URI'));
+  }
+
+  /**
+   * Get MongoDB reconnect interval
+   */
+  private getMongoReconnectInterval(): number {
+    return Number(this.getParam('MONGO_RECONNECT_INTERVAL'));
+  }
+
+  /**
+   * Get MongoDB poll size
+   */
+  private getMongoPoolSize(): number {
+    return Number(this.getParam('MONGO_POLL_SIZE'));
+  }
+
+  /**
+   * Get MongoDB buffer max entries
+   */
+  private getMongoBufferMaxEntries(): number {
+    return Number(this.getParam('MONGO_BUFFER_MAX_ENTRIES'));
+  }
+
+  /**
+   * Get MongoDB connect timeout (ms)
+   */
+  private getMongoConnectTimeOutMS(): number {
+    return Number(this.getParam('MONGO_CONNECT_TIMEOUT_MS'));
+  }
+
+  /**
+   * Get MongoDB socket timeout (ms)
+   */
+  private getMongoSocketTimeOutMS(): number {
+    return Number(this.getParam('MONGO_SOCKET_TIMEOUT_MS'));
   }
 }

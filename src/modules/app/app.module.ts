@@ -4,11 +4,15 @@ import { ConfigModule } from '../config/config.module';
 import { VersionModule } from '../version/version.module';
 import { AuthModule } from '../auth/auth.module';
 import { HeaderMiddleware } from '../../core/middleware/header.middleware';
+import { CatsModule } from '../cats/cats.module';
+import { DatabaseModule } from '../../infra/database/database.module';
 
 @Module({
   imports: [
     ConfigModule,
+    DatabaseModule,
     AuthModule,
+    CatsModule,
     VersionModule],
   controllers: [],
   providers: [AppService],

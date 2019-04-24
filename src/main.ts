@@ -3,6 +3,7 @@ import { AppModule } from './modules/app/app.module';
 import { ConfigService } from './services/config/config.service';
 import { Logger } from '@nestjs/common';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
+import CoreUtils from './core/utils/core-utils';
 import portFinder = require('portfinder');
 
 /**
@@ -30,27 +31,31 @@ async function buildServer(cfg: ConfigService) {
   const enableAuth: boolean = cfg.apiConfig.authEnable;
   const env: string = cfg.apiConfig.environment;
   const port: number = cfg.apiConfig.port;
+  const enableCors: boolean = cfg.apiConfig.corsEnable;
 
   /**
    * Start Application Listen
    */
   const app = await NestFactory.create<NestFastifyApplication>(AppModule);
+
+  // Enable CORS
+  if (enableCors) {
+    app.enableCors();
+  }
+
   await app.listen(port);
 
   /**
    * Create Logger Config
    */
-  Logger.log('', 'Configuration [Start] ');
-  Logger.log(
-    `Environment    : ${
-      env === 'dev' ? 'development' :
-        env === 'prd' ? 'production' :
-          env === 'qas' ? 'QAS' : 'Unknown'
-      }`,
-  );
-  Logger.log(`Authentication : ${String(enableAuth ? 'enable' : 'disable')}`);
-  Logger.log(`Port           : ${String(port)}`);
-  Logger.log('\n', 'Configuration [End] ');
+  Logger.log('', ' Configuration (Start) ');
+
+  /**
+   * Print Configurations
+   */
+  CoreUtils.PrintApiConfiguration(cfg.apiConfig);
+
+  Logger.log('\n', ' Configuration (End) ');
   Logger.log(`${name} on port: ${String(port)}`, 'API');
 }
 
