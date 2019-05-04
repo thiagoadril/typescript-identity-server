@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './modules/app/app.module';
-import { ConfigService } from './services/config/config.service';
+import { ConfigService } from './modules/config/config.service';
 import { Logger } from '@nestjs/common';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import CoreUtils from './core/utils/core-utils';
@@ -10,28 +10,30 @@ import portFinder = require('portfinder');
  * Bootstrap Application
  */
 async function bootstrap() {
-  const cfg = new ConfigService();
+  const configService = new ConfigService();
   await portFinder.getPort({
-    port: cfg.apiConfig.port,    // minimum port
-    stopPort: cfg.apiConfig.port, // maximum port
+    port: configService.apiConfig.port,    // minimum port
+    stopPort: configService.apiConfig.port, // maximum port
   }, (err, port) => {
     if (!err) {
-      return buildServer(cfg);
+      return buildServer(configService);
     } else {
-      Logger.error(`API not started, port ${cfg.apiConfig.port} in use.`, null, 'Port');
+      Logger.error(
+        `API not started, port ${configService.apiConfig.port} in use.`,
+        null, 'Port');
     }
   });
 }
 
-async function buildServer(cfg: ConfigService) {
+async function buildServer(configService: ConfigService) {
   /**
    * Configuration Fields
    */
-  const name: string = cfg.apiConfig.name;
-  const enableAuth: boolean = cfg.apiConfig.authEnable;
-  const env: string = cfg.apiConfig.environment;
-  const port: number = cfg.apiConfig.port;
-  const enableCors: boolean = cfg.apiConfig.corsEnable;
+  const name: string = configService.apiConfig.name;
+  const enableAuth: boolean = configService.apiConfig.authEnable;
+  const env: string = configService.apiConfig.environment;
+  const port: number = configService.apiConfig.port;
+  const enableCors: boolean = configService.apiConfig.corsEnable;
 
   /**
    * Start Application Listen
@@ -53,7 +55,7 @@ async function buildServer(cfg: ConfigService) {
   /**
    * Print Configurations
    */
-  CoreUtils.PrintApiConfiguration(cfg.apiConfig);
+  CoreUtils.PrintConfigurations(configService);
 
   Logger.log('\n', ' Configuration (End) ');
   Logger.log(`${name} on port: ${String(port)}`, 'API');

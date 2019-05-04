@@ -1,1 +1,1 @@
-export * from './mongoose-options.interface';
+export * from './cassandra.options.interface';

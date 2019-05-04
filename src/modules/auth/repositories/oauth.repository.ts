@@ -1,10 +1,10 @@
-import { ClientDatabase } from './client-database';
 import { OAuthClientRepository } from './oauth-client.repository';
 import { OAuthUserRepository } from './oauth-user.repository';
+import { Client } from 'cassandra-driver';
 
 export class OAuthRepository {
 
-  constructor(private readonly client: ClientDatabase) {
+  constructor(private readonly client: Client) {
     this.client = client;
   }
 

@@ -4,10 +4,12 @@ import * as fs from 'fs';
 import { EnvConfig } from '../../core/config/interface/env-config.interface';
 import { EnvConfigSchema } from '../../core/config/schema/env-config-schema';
 import { ApiConfig } from '../../core/config/entities/api-config';
+import { DbConfig } from '../../core/config/entities/db-config';
 import appRoot = require('app-root-path');
 
 export class ConfigService {
   public apiConfig: ApiConfig;
+  public dbConfig: DbConfig;
   /**
    * Configuration Static Fields
    */
@@ -57,12 +59,16 @@ export class ConfigService {
       this.getApiPort(),
       this.isApiAuthEnabled(),
       this.isApiCorsEnabled(),
-      this.getMongoUri(),
-      this.getMongoReconnectInterval(),
-      this.getMongoPoolSize(),
-      this.getMongoBufferMaxEntries(),
-      this.getMongoConnectTimeOutMS(),
-      this.getMongoSocketTimeOutMS(),
+    );
+    this.dbConfig = new DbConfig(
+      this.getCassandraContactPoints(),
+      this.getCassandraLocalDataCenter(),
+      this.getCassandraKeyspace(),
+      this.getCassandraPort(),
+      this.isCassandraAuthEnable(),
+      this.getCassandraAuthUsername(),
+      this.getCassandraAuthPassword(),
+      this.getCassandraQueryConsistency(),
     );
     return this;
   }
@@ -86,7 +92,7 @@ export class ConfigService {
    * Verify api debug
    */
   private isApiDebug(): boolean {
-    return Boolean(this.getParam('API_AUTH_ENABLED'));
+    return Boolean(this.getParam('API_DEBUG'));
   }
 
   /**
@@ -125,44 +131,65 @@ export class ConfigService {
   }
 
   /**
-   * Get MongoDB URI
+   * Get Cassandra contact points
    */
-  private getMongoUri(): string {
-    return String(this.getParam('MONGO_URI'));
+  private getCassandraContactPoints(): string[] {
+    const value: string = String(this.getParam('CASSANDRA_CONTACT_POINTS'));
+    let arrValue: string[];
+    try {
+      arrValue = value.split(',');
+    } catch (e) {
+      throw new Error(e);
+    }
+    return arrValue;
   }
 
   /**
-   * Get MongoDB reconnect interval
+   * Get Cassandra local datacenter
    */
-  private getMongoReconnectInterval(): number {
-    return Number(this.getParam('MONGO_RECONNECT_INTERVAL'));
+  private getCassandraLocalDataCenter(): string {
+    return String(this.getParam('CASSANDRA_LOCAL_DATACENTER'));
   }
 
   /**
-   * Get MongoDB poll size
+   * Get Cassandra keyspace
    */
-  private getMongoPoolSize(): number {
-    return Number(this.getParam('MONGO_POLL_SIZE'));
+  private getCassandraKeyspace(): string {
+    return String(this.getParam('CASSANDRA_KEYSPACE'));
   }
 
   /**
-   * Get MongoDB buffer max entries
+   * Get Cassandra port
    */
-  private getMongoBufferMaxEntries(): number {
-    return Number(this.getParam('MONGO_BUFFER_MAX_ENTRIES'));
+  private getCassandraPort(): number {
+    return Number(this.getParam('CASSANDRA_PORT'));
   }
 
   /**
-   * Get MongoDB connect timeout (ms)
+   * Get Cassandra auth status
    */
-  private getMongoConnectTimeOutMS(): number {
-    return Number(this.getParam('MONGO_CONNECT_TIMEOUT_MS'));
+  private isCassandraAuthEnable(): boolean {
+    return Boolean(this.getParam('CASSANDRA_AUTH_ENABLE'));
   }
 
   /**
-   * Get MongoDB socket timeout (ms)
+   * Get Cassandra auth username
    */
-  private getMongoSocketTimeOutMS(): number {
-    return Number(this.getParam('MONGO_SOCKET_TIMEOUT_MS'));
+  private getCassandraAuthUsername(): string {
+    return String(this.getParam('CASSANDRA_AUTH_USERNAME'));
+  }
+
+  /**
+   * Get Cassandra auth password
+   */
+  private getCassandraAuthPassword(): string {
+    return String(this.getParam('CASSANDRA_AUTH_PASSWORD'));
+  }
+
+  /**
+   * Get Cassandra query consistency
+   */
+  private getCassandraQueryConsistency(): number {
+    return Number(this.getParam('CASSANDRA_QUERY_CONSISTENCY'));
   }
 }

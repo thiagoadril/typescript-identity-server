@@ -1,39 +1,14 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import {
-  MongooseModuleAsyncOptions,
-  MongooseModuleOptions,
-} from './interfaces/mongoose-options.interface';
-import { MongooseCoreModule } from './mongoose-core.module';
-import { createMongooseProviders } from './mongoose.providers';
+import { CassandraCoreModule } from './cassandra.core.module';
+import { ConfigService } from '../../../modules/config/config.service';
 
 @Module({})
-export class MongooseModule {
-  static forRoot(
-    uri: string,
-    options: MongooseModuleOptions = {},
-  ): DynamicModule {
+export class CassandraModule {
+  static forRootAsync(options: {}): DynamicModule {
     return {
-      module: MongooseModule,
-      imports: [MongooseCoreModule.forRoot(uri, options)],
-    };
-  }
-
-  static forRootAsync(options: MongooseModuleAsyncOptions): DynamicModule {
-    return {
-      module: MongooseModule,
-      imports: [MongooseCoreModule.forRootAsync(options)],
-    };
-  }
-
-  static forFeature(
-    models: { name: string; schema: any; collection?: string }[] = [],
-    connectionName?: string,
-  ): DynamicModule {
-    const providers = createMongooseProviders(connectionName, models);
-    return {
-      module: MongooseModule,
-      providers: providers,
-      exports: providers,
+      module: CassandraModule,
+      providers: [ConfigService],
+      imports: [CassandraCoreModule.forRootAsync(options)],
     };
   }
 }

@@ -1,18 +1,22 @@
-import { AppService } from '../../services/app/app.service';
+import { AppService } from './app.service';
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '../config/config.module';
-import { VersionModule } from '../version/version.module';
 import { AuthModule } from '../auth/auth.module';
 import { HeaderMiddleware } from '../../core/middleware/header.middleware';
-import { CatsModule } from '../cats/cats.module';
-import { DatabaseModule } from '../../infra/database/database.module';
+import { PhotoModule } from '../photo/photo.module';
+import { CassandraModule } from '../../database/core/cassandra';
+import { VersionModule } from '../version/version.module';
+import { ConfigCassandra } from '../config/config.cassandra';
 
 @Module({
   imports: [
     ConfigModule,
-    DatabaseModule,
+    CassandraModule.forRootAsync({
+      useClass: ConfigCassandra,
+      imports: [ConfigModule],
+    }),
+    PhotoModule,
     AuthModule,
-    CatsModule,
     VersionModule],
   controllers: [],
   providers: [AppService],

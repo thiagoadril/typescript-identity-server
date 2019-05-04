@@ -1,26 +1,24 @@
 import { Type } from '@nestjs/common';
 import { ModuleMetadata } from '@nestjs/common/interfaces';
+import { ClientOptions } from 'cassandra-driver';
 
-export interface MongooseModuleOptions {
+export interface CassandraModuleOptions extends ClientOptions {
   [key: string]: any;
-  retryAttempts?: number;
-  retryDelay?: number;
-  connectionName?: string;
 }
 
-export interface MongooseOptionsFactory {
-  createMongooseOptions():
-    | Promise<MongooseModuleOptions>
-    | MongooseModuleOptions;
+export interface CassandraOptionsFactory {
+  createCassandraOptions():
+    | Promise<CassandraModuleOptions>
+    | CassandraModuleOptions;
 }
 
-export interface MongooseModuleAsyncOptions
+export interface CassandraModuleAsyncOptions
   extends Pick<ModuleMetadata, 'imports'> {
   connectionName?: string;
-  useExisting?: Type<MongooseOptionsFactory>;
-  useClass?: Type<MongooseOptionsFactory>;
+  useExisting?: Type<CassandraOptionsFactory>;
+  useClass?: Type<CassandraOptionsFactory>;
   useFactory?: (
     ...args: any[]
-  ) => Promise<MongooseModuleOptions> | MongooseModuleOptions;
+  ) => Promise<CassandraModuleOptions> | CassandraModuleOptions;
   inject?: any[];
 }

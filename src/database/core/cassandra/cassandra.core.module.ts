@@ -1,128 +1,49 @@
-import {
-  DynamicModule,
-  Global,
-  Inject,
-  Module,
-  Provider,
-} from '@nestjs/common';
-import { ModuleRef } from '@nestjs/core';
-import * as mongoose from 'mongoose';
+import { DynamicModule, Global, Inject, Logger, Module, Provider } from '@nestjs/common';
 import { defer } from 'rxjs';
-import { getConnectionToken, handleRetry } from './common/mongoose.utils';
-import {
-  MongooseModuleAsyncOptions,
-  MongooseModuleOptions,
-  MongooseOptionsFactory,
-} from './interfaces/mongoose-options.interface';
-import {
-  CASSANDRA_CONNECTION_NAME,
-  CASSANDRA_MODULE_OPTIONS,
-} from './cassandra.constants';
+import { getConnectionToken } from './common/cassandra.utils';
+import { CassandraModuleAsyncOptions, CassandraModuleOptions, CassandraOptionsFactory } from './interfaces/cassandra.options.interface';
+import { CASSANDRA_CONNECTION_NAME, CASSANDRA_MODULE_OPTIONS } from './cassandra.constants';
+import { Client } from 'cassandra-driver';
 
 @Global()
 @Module({})
-export class MongooseCoreModule {
-  constructor(
-    @Inject(CASSANDRA_CONNECTION_NAME) private readonly connectionName: string,
-    private readonly moduleRef: ModuleRef,
-  ) {}
-
-  static forRoot(
-    uri: string,
-    options: MongooseModuleOptions = {},
-  ): DynamicModule {
-    const {
-      retryAttempts,
-      retryDelay,
-      connectionName,
-      ...mongooseOptions
-    } = options;
-
-    const mongooseConnectionName = getConnectionToken(connectionName);
-
-    const mongooseConnectionNameProvider = {
-      provide: CASSANDRA_CONNECTION_NAME,
-      useValue: mongooseConnectionName,
-    };
-    const connectionProvider = {
-      provide: mongooseConnectionName,
-      useFactory: async (): Promise<any> =>
-        await defer(async () =>
-          mongoose.createConnection(uri, mongooseOptions as any),
-        )
-          .pipe(handleRetry(retryAttempts, retryDelay))
-          .toPromise(),
-    };
-    return {
-      module: MongooseCoreModule,
-      providers: [connectionProvider, mongooseConnectionNameProvider],
-      exports: [connectionProvider],
-    };
+export class CassandraCoreModule {
+  constructor(@Inject(CASSANDRA_CONNECTION_NAME)
+              private readonly connectionName: string) {
   }
 
-  static forRootAsync(options: MongooseModuleAsyncOptions): DynamicModule {
-    const mongooseConnectionName = getConnectionToken(options.connectionName);
-
-    const mongooseConnectionNameProvider = {
+  static forRootAsync(options: CassandraModuleAsyncOptions): DynamicModule {
+    const connName = getConnectionToken(options.connectionName);
+    const cassandraConnectionNameProvider = {
       provide: CASSANDRA_CONNECTION_NAME,
-      useValue: mongooseConnectionName,
+      useValue: connName,
     };
 
     const connectionProvider = {
-      provide: mongooseConnectionName,
-      useFactory: async (
-        mongooseModuleOptions: MongooseModuleOptions,
-      ): Promise<any> => {
-        const {
-          retryAttempts,
-          retryDelay,
-          connectionName,
-          uri,
-          ...mongooseOptions
-        } = mongooseModuleOptions;
-
-        return await defer(async () =>
-          mongoose.createConnection(
-            mongooseModuleOptions.uri,
-            mongooseOptions as any,
-          ),
-        )
-          .pipe(
-            handleRetry(
-              mongooseModuleOptions.retryAttempts,
-              mongooseModuleOptions.retryDelay,
-            ),
-          )
-          .toPromise();
+      provide: connName,
+      useFactory: async (cassandraModuleOptions: CassandraModuleOptions): Promise<any> => {
+        const client = new Client(cassandraModuleOptions);
+        return await defer(async () => client).toPromise();
       },
       inject: [CASSANDRA_MODULE_OPTIONS],
     };
-    const asyncProviders = this.createAsyncProviders(options);
     return {
-      module: MongooseCoreModule,
+      module: CassandraCoreModule,
       imports: options.imports,
       providers: [
-        ...asyncProviders,
+        ...this.createAsyncProviders(options),
         connectionProvider,
-        mongooseConnectionNameProvider,
+        cassandraConnectionNameProvider,
       ],
       exports: [connectionProvider],
     };
   }
 
-  async onModuleDestroy() {
-    const connection = this.moduleRef.get<any>(this.connectionName);
-    connection && (await connection.close());
-  }
-
-  private static createAsyncProviders(
-    options: MongooseModuleAsyncOptions,
-  ): Provider[] {
+  private static createAsyncProviders(options: CassandraModuleAsyncOptions): Provider[] {
     if (options.useExisting || options.useFactory) {
       return [this.createAsyncOptionsProvider(options)];
     }
-    return [
-      this.createAsyncOptionsProvider(options),
+    return [this.createAsyncOptionsProvider(options),
       {
         provide: options.useClass,
         useClass: options.useClass,
@@ -130,20 +51,11 @@ export class MongooseCoreModule {
     ];
   }
 
-  private static createAsyncOptionsProvider(
-    options: MongooseModuleAsyncOptions,
-  ): Provider {
-    if (options.useFactory) {
-      return {
-        provide: CASSANDRA_MODULE_OPTIONS,
-        useFactory: options.useFactory,
-        inject: options.inject || [],
-      };
-    }
+  private static createAsyncOptionsProvider(options: CassandraModuleAsyncOptions): Provider {
     return {
       provide: CASSANDRA_MODULE_OPTIONS,
-      useFactory: async (optionsFactory: MongooseOptionsFactory) =>
-        await optionsFactory.createMongooseOptions(),
+      useFactory: async (optionsFactory: CassandraOptionsFactory) =>
+        await optionsFactory.createCassandraOptions(),
       inject: [options.useExisting || options.useClass],
     };
   }

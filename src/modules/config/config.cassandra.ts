@@ -5,7 +5,7 @@ import { auth } from 'cassandra-driver';
 import PlainTextAuthProvider = auth.PlainTextAuthProvider;
 
 @Injectable()
-export class ConfigCassandraService implements CassandraOptionsFactory {
+export class ConfigCassandra implements CassandraOptionsFactory {
   constructor(private readonly configService: ConfigService) {
   }
 
