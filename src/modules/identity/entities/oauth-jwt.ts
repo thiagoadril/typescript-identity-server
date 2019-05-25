@@ -1,5 +1,8 @@
+import { types } from 'cassandra-driver';
+import Uuid = types.Uuid;
+
 export class OAuthJwt {
-  clientId: string;
+  clientId: Uuid;
   subject: string;
   publicKey: string;
   created: number;
