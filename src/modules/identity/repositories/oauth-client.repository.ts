@@ -3,8 +3,7 @@ import { InjectConnection } from '../../../database/core/cassandra/common';
 import ResultSet = types.ResultSet;
 
 export class OAuthClientRepository {
-  constructor(@InjectConnection() private readonly client: Client) {
-  }
+  constructor(@InjectConnection() private readonly client: Client) {}
 
   /**
    * Find client by id

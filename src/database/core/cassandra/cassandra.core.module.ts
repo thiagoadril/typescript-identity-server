@@ -1,16 +1,17 @@
-import { DynamicModule, Global, Inject, Logger, Module, Provider } from '@nestjs/common';
+import { DynamicModule, Global, Inject, Module, Provider } from '@nestjs/common';
 import { defer } from 'rxjs';
-import { getConnectionToken } from './common/cassandra.utils';
-import { CassandraModuleAsyncOptions, CassandraModuleOptions, CassandraOptionsFactory } from './interfaces/cassandra.options.interface';
+import { getConnectionToken } from './common';
+import { CassandraModuleAsyncOptions, CassandraModuleOptions, CassandraOptionsFactory } from './interfaces';
 import { CASSANDRA_CONNECTION_NAME, CASSANDRA_MODULE_OPTIONS } from './cassandra.constants';
 import { Client } from 'cassandra-driver';
 
 @Global()
 @Module({})
 export class CassandraCoreModule {
-  constructor(@Inject(CASSANDRA_CONNECTION_NAME)
-              private readonly connectionName: string) {
-  }
+  constructor(
+    @Inject(CASSANDRA_CONNECTION_NAME)
+    private readonly connectionName: string,
+  ) {}
 
   static forRootAsync(options: CassandraModuleAsyncOptions): DynamicModule {
     const connName = getConnectionToken(options.connectionName);
@@ -21,7 +22,9 @@ export class CassandraCoreModule {
 
     const connectionProvider = {
       provide: connName,
-      useFactory: async (cassandraModuleOptions: CassandraModuleOptions): Promise<any> => {
+      useFactory: async (
+        cassandraModuleOptions: CassandraModuleOptions,
+      ): Promise<any> => {
         const client = new Client(cassandraModuleOptions);
         return await defer(async () => client).toPromise();
       },
@@ -31,7 +34,7 @@ export class CassandraCoreModule {
       module: CassandraCoreModule,
       imports: options.imports,
       providers: [
-        ...this.createAsyncProviders(options),
+        ...this.buildAsyncProviders(options),
         connectionProvider,
         cassandraConnectionNameProvider,
       ],
@@ -39,11 +42,14 @@ export class CassandraCoreModule {
     };
   }
 
-  private static createAsyncProviders(options: CassandraModuleAsyncOptions): Provider[] {
+  private static buildAsyncProviders(
+    options: CassandraModuleAsyncOptions,
+  ): Provider[] {
     if (options.useExisting || options.useFactory) {
-      return [this.createAsyncOptionsProvider(options)];
+      return [this.buildAsyncOptionsProvider(options)];
     }
-    return [this.createAsyncOptionsProvider(options),
+    return [
+      this.buildAsyncOptionsProvider(options),
       {
         provide: options.useClass,
         useClass: options.useClass,
@@ -51,11 +57,13 @@ export class CassandraCoreModule {
     ];
   }
 
-  private static createAsyncOptionsProvider(options: CassandraModuleAsyncOptions): Provider {
+  private static buildAsyncOptionsProvider(
+    options: CassandraModuleAsyncOptions,
+  ): Provider {
     return {
       provide: CASSANDRA_MODULE_OPTIONS,
       useFactory: async (optionsFactory: CassandraOptionsFactory) =>
-        await optionsFactory.createCassandraOptions(),
+        await optionsFactory.buildCassandraOptions(),
       inject: [options.useExisting || options.useClass],
     };
   }

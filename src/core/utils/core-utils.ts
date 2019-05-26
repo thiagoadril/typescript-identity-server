@@ -1,13 +1,15 @@
 import { Logger } from '@nestjs/common';
-import { ConfigService } from '../../modules/config/config.service';
+import { LoaderService } from '../../modules/loader/loader.service';
 
 export default class CoreUtils {
-  public static PrintConfigurations(configService: ConfigService) {
+  public static PrintConfigurations(configService: LoaderService) {
     /**
      * API
      */
     Logger.log(' * [Api] ------------------------------');
-    for (const [key, value] of Object.entries(JSON.parse(JSON.stringify(configService.apiConfig)))) {
+    for (const [key, value] of Object.entries(
+      JSON.parse(JSON.stringify(configService.apiConfig)),
+    )) {
       Logger.log(` * ${String(key)}: ${String(value)}`);
     }
 
@@ -16,9 +18,10 @@ export default class CoreUtils {
     /**
      * Database
      */
-    for (const [key, value] of Object.entries(JSON.parse(JSON.stringify(configService.dbConfig)))) {
+    for (const [key, value] of Object.entries(
+      JSON.parse(JSON.stringify(configService.dbConfig)),
+    )) {
       Logger.log(` * ${String(key)}: ${String(value)}`);
     }
   }
-
 }

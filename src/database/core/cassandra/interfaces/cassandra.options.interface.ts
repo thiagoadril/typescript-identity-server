@@ -7,7 +7,7 @@ export interface CassandraModuleOptions extends ClientOptions {
 }
 
 export interface CassandraOptionsFactory {
-  createCassandraOptions():
+  buildCassandraOptions():
     | Promise<CassandraModuleOptions>
     | CassandraModuleOptions;
 }

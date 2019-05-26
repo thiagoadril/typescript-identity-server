@@ -1,9 +1,9 @@
-import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException, UnprocessableEntityException } from '@nestjs/common';
+import { ArgumentMetadata, Injectable, PipeTransform, UnprocessableEntityException } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 
 @Injectable()
-export class ValidationPipe implements PipeTransform<any> {
+export class ValidationEntityPipe implements PipeTransform<any> {
   skip: boolean = false;
 
   constructor(skip: boolean = false) {
@@ -16,26 +16,25 @@ export class ValidationPipe implements PipeTransform<any> {
     }
     const object = plainToClass(metatype, value);
     const errors = await validate(object, { skipMissingProperties: this.skip });
-    console.log(errors);
     if (errors.length > 0) {
-      const messages = [];
-      errors.map(value => {
-        if (value.constraints !== null) {
-          const constraintValues = Object.values(value.constraints);
+      const errorList = [];
+      errors.map(err => {
+        if (err.constraints !== null) {
+          const constraintValues = Object.values(err.constraints);
           if (constraintValues != null && constraintValues.length > 0) {
             constraintValues.map(message => {
-              messages.push(message);
+              errorList.push({ [err.property]: message });
             });
           }
         }
       });
-      throw new UnprocessableEntityException(messages);
+      throw new UnprocessableEntityException(errorList);
     }
     return value;
   }
 
   private toValidate(metatype): boolean {
     const types = [String, Boolean, Number, Array, Object];
-    return !types.find((type) => metatype === type);
+    return !types.find(type => metatype === type);
   }
 }

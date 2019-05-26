@@ -10,10 +10,17 @@ import { AuthorizeController } from './controllers/authorize.controller';
 import { TokenController } from './controllers/token.controller';
 import { InfoController } from './controllers/info.controller';
 import { AuthService } from './services/auth.service';
+import { AccountController } from './controllers/account.controller';
 
 @Module({
   imports: [],
-  controllers: [AuthController, AuthorizeController, TokenController, InfoController],
+  controllers: [
+    AccountController,
+    AuthController,
+    AuthorizeController,
+    TokenController,
+    InfoController,
+  ],
   providers: [
     OAuthClientRepository,
     OAuthUserRepository,
@@ -24,5 +31,4 @@ import { AuthService } from './services/auth.service';
     AuthService,
   ],
 })
-export class AuthModule {
-}
+export class IdentityModule {}

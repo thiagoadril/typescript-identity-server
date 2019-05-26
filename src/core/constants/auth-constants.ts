@@ -20,4 +20,5 @@ export const ExpiresIn: number = 3600;
  *
  * Used two random keys (60) chars
  */
-export const SecretOrPrivateKey: string = '9eN{g2}f$]:Tu_u(e13~ZWPjOu,=s@xTDBD4D)TI)-Y]zFRgqDUlt}nJ6]Sg';
+export const SecretOrPrivateKey: string =
+  '9eN{g2}f$]:Tu_u(e13~ZWPjOu,=s@xTDBD4D)TI)-Y]zFRgqDUlt}nJ6]Sg';

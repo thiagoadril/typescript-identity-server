@@ -1,4 +1,4 @@
-export class ApiConfig {
+export class BaseApiConfig {
   name: string;
   version: string;
   environment: string;
@@ -7,8 +7,15 @@ export class ApiConfig {
   authEnable: boolean;
   corsEnable: boolean;
 
-  constructor(name: string, version: string, environment: string, debug: boolean,
-              port: number, authEnable: boolean, corsEnable: boolean) {
+  constructor(
+    name: string,
+    version: string,
+    environment: string,
+    debug: boolean,
+    port: number,
+    authEnable: boolean,
+    corsEnable: boolean,
+  ) {
     this.name = name;
     this.version = version;
     this.environment = environment;

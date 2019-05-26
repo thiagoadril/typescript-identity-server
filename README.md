@@ -3,12 +3,11 @@
 Set your environment
 Options: [ dev, prd, qas ]
 
- Options
- 
- * set NODE_END=dev
- * set NODE_END=prd
- * set NODE_END=qas
+Options
 
+- set NODE_END=dev
+- set NODE_END=prd
+- set NODE_END=qas
 
 ## Installation
 

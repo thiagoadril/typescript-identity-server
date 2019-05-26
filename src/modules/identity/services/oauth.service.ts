@@ -17,12 +17,13 @@ export class OAuthService {
    * @param refreshTokens
    * @param authorizationCodes
    */
-  constructor(private readonly clients: OAuthClientRepository,
-              private readonly users: OAuthUserRepository,
-              private readonly accessTokens: OAuthAccessTokenRepository,
-              private readonly refreshTokens: OAuthRefreshTokensRepository,
-              private readonly authorizationCodes: OAuthAuthorizationCodesRepository) {
-  }
+  constructor(
+    private readonly clients: OAuthClientRepository,
+    private readonly users: OAuthUserRepository,
+    private readonly accessTokens: OAuthAccessTokenRepository,
+    private readonly refreshTokens: OAuthRefreshTokensRepository,
+    private readonly authorizationCodes: OAuthAuthorizationCodesRepository,
+  ) {}
 
   /**
    * all photos

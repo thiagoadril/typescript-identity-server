@@ -1,11 +1,10 @@
 import { Client, types } from 'cassandra-driver';
 import { InjectConnection } from '../../../database/core/cassandra/common';
-import ResultSet = types.ResultSet;
 import { OAuthUser } from '../entities/oauth-user';
+import ResultSet = types.ResultSet;
 
 export class OAuthUserRepository {
-  constructor(@InjectConnection() private readonly client: Client) {
-  }
+  constructor(@InjectConnection() private readonly client: Client) {}
 
   /**
    * Find user by id
@@ -20,7 +19,10 @@ export class OAuthUserRepository {
    * @param username
    */
   findByUsername(username: string): Promise<ResultSet> {
-    return this.client.execute('QUERY_SQL');
+    const query = 'SELECT username FROM oauth_users WHERE username=?';
+    return this.client.execute(query, [username], {
+      prepare: true,
+    });
   }
 
   /**
@@ -28,12 +30,14 @@ export class OAuthUserRepository {
    * @param user
    */
   save(user: OAuthUser): Promise<ResultSet> {
-    const query = '' +
+    const query =
+      '' +
       'INSERT INTO oauth_users ' +
       '(user_id, name, password, username, verified, created, updated) ' +
       'VALUES (?, ?, ?, ?, ?, ?, ?);';
 
-    return this.client.execute(query,
+    return this.client.execute(
+      query,
       [
         user.id,
         user.name,

@@ -1,11 +1,10 @@
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ConfigService } from '../../modules/config/config.service';
+import { LoaderService } from '../../modules/loader/loader.service';
 
 @Injectable()
 export class HeaderMiddleware implements NestMiddleware {
-  constructor(private readonly config: ConfigService) {
-  }
+  constructor(private readonly config: LoaderService) {}
 
   use(req: Request, res: Response, next: () => void) {
     res.removeHeader('X-Powered-By');

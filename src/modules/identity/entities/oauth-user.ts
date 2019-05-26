@@ -17,5 +17,6 @@ export class OAuthUser {
     this.password = password;
     this.verified = false;
     this.created = new Date().getTime();
+    // this.updated = new Date().getTime();
   }
 }

@@ -1,13 +1,13 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { CassandraCoreModule } from './cassandra.core.module';
-import { ConfigService } from '../../../modules/config/config.service';
+import { LoaderService } from '../../../modules/loader/loader.service';
 
 @Module({})
 export class CassandraModule {
   static forRootAsync(options: {}): DynamicModule {
     return {
       module: CassandraModule,
-      providers: [ConfigService],
+      providers: [LoaderService],
       imports: [CassandraCoreModule.forRootAsync(options)],
     };
   }

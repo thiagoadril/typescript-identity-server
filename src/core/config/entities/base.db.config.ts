@@ -1,4 +1,4 @@
-export class DbConfig {
+export class BaseDbConfig {
   cassandraContactPoints: string[];
   cassandraLocalDataCenter: string;
   cassandraKeyspace: string;
@@ -8,10 +8,16 @@ export class DbConfig {
   cassandraAuthPassword: string;
   cassandraQueryConsistency: number;
 
-  constructor(cassandraContactPoints: string[], cassandraLocalDataCenter: string,
-              cassandraKeyspace: string, cassandraPort: number, cassandraAuthEnable: boolean,
-              cassandraAuthUsername: string, cassandraAuthPassword: string,
-              cassandraQueryConsistency: number) {
+  constructor(
+    cassandraContactPoints: string[],
+    cassandraLocalDataCenter: string,
+    cassandraKeyspace: string,
+    cassandraPort: number,
+    cassandraAuthEnable: boolean,
+    cassandraAuthUsername: string,
+    cassandraAuthPassword: string,
+    cassandraQueryConsistency: number,
+  ) {
     this.cassandraContactPoints = cassandraContactPoints;
     this.cassandraLocalDataCenter = cassandraLocalDataCenter;
     this.cassandraKeyspace = cassandraKeyspace;

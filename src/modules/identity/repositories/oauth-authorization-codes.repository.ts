@@ -3,8 +3,7 @@ import { InjectConnection } from '../../../database/core/cassandra/common';
 import ResultSet = types.ResultSet;
 
 export class OAuthAuthorizationCodesRepository {
-  constructor(@InjectConnection() private readonly client: Client) {
-  }
+  constructor(@InjectConnection() private readonly client: Client) {}
 
   /**
    * Find authorization code by token
@@ -33,5 +32,4 @@ export class OAuthAuthorizationCodesRepository {
   delete(token): Promise<ResultSet> {
     return this.client.execute('QUERY_SQL');
   }
-
 }
