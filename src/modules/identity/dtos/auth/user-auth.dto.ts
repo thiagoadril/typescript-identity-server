@@ -5,20 +5,10 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Matches } from 'class-validator/decorator/decorators';
+
 import { ValidationConstants } from '../../../../core/constants/validation-constants';
-import { ApiModelProperty } from '@nestjs/swagger';
 
-export class UserCreateDto {
-  @IsDefined({ message: ValidationConstants.required })
-  @IsNotEmpty({ message: ValidationConstants.empty })
-  @MinLength(3, { message: ValidationConstants.minLength })
-  @MaxLength(100, { message: ValidationConstants.maxLength })
-  @Matches(/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/, {
-    message: ValidationConstants.invalid,
-  })
-  name: string;
-
+export class UserAuthDto {
   @IsDefined({ message: ValidationConstants.required })
   @IsNotEmpty({ message: ValidationConstants.empty })
   @IsEmail({}, { message: ValidationConstants.invalid })

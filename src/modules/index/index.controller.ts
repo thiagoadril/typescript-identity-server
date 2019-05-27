@@ -1,60 +1,21 @@
-import { Controller, Get } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { Controller, Get, Res, HttpStatus } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
+import { Response } from 'express';
+import { LoaderService } from '../../core/loader/loader.service';
 
 @ApiUseTags('Home')
 @Controller()
 export class IndexController {
+  constructor(private loaderService: LoaderService) {}
   /**
    * GET /
    */
   @Get()
-  index(): Observable<object> {
-    return new Observable(subscriber => {
-      subscriber.next(
-        /*
-      [
-        {
-          type: 'get', path: 'identity',
-        },
-        {
-          type: 'post', path: 'identity',
-        },
-        {
-          type: 'get', path: 'identity/logout',
-        },
-        {
-          type: 'get', path: 'authorize',
-        },
-        {
-          type: 'post', path: 'authorize',
-        },
-        {
-          type: 'post', path: 'token',
-        },
-        {
-          type: 'get', path: 'token/revoke',
-        },
-        {
-          type: 'get', path: 'token/receive',
-        },
-        {
-          type: 'get', path: 'info',
-        },
-        {
-          type: 'get', path: 'info/sso',
-        },
-        {
-          type: 'get', path: 'info/user',
-        },
-        {
-          type: 'get', path: 'info/client',
-        }, {
-          type: 'get', path: 'info/token',
-        }]*/
-        { message: 'welcome to api identity 2' },
-      );
-      subscriber.complete();
+  async index(@Res() res: Response): Promise<string> {
+    return await new Promise<string>(() => {
+      res
+        .status(HttpStatus.OK)
+        .json({ message: `Welcome to ${this.loaderService.apiConfig.name}` });
     });
   }
 }

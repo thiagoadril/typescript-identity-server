@@ -1,12 +1,12 @@
 import * as dotenv from 'dotenv';
 import * as Joi from 'joi';
 import * as fs from 'fs';
-import { BaseConfig } from '../../core/config/interface/base.config.interface';
-import { BaseConfigSchema } from '../../core/config/schema/base.config.schema';
-import { BaseApiConfig } from '../../core/config/entities/base.api.config';
-import { BaseDbConfig } from '../../core/config/entities/base.db.config';
+import { BaseConfig } from '../config/interface/base.config.interface';
+import { BaseConfigSchema } from '../config/schema/base.config.schema';
+import { BaseApiConfig } from '../config/entities/base.api.config';
+import { BaseDbConfig } from '../config/entities/base.db.config';
 import appRoot = require('app-root-path');
-import { BaseSwaggerConfig } from '../../core/config/entities/base.swagger.config';
+import { BaseSwaggerConfig } from '../config/entities/base.swagger.config';
 
 export class LoaderService {
   public apiConfig: BaseApiConfig;

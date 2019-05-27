@@ -1,5 +1,5 @@
-import { Controller, Get, Post } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { Controller, Get, Post, HttpStatus, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { OAuthService } from '../services/oauth.service';
 import { ApiUseTags } from '@nestjs/swagger';
 
@@ -12,10 +12,9 @@ export class AuthorizeController {
    * GET /authorize
    */
   @Get()
-  authorizeGet(): Observable<string> {
-    return new Observable(subscriber => {
-      subscriber.next('authorize get');
-      subscriber.complete();
+  async authorizeGet(@Res() res: Response): Promise<string> {
+    return await new Promise<string>(() => {
+      res.status(HttpStatus.OK).send({ message: 'authorize get' });
     });
   }
 
@@ -23,10 +22,9 @@ export class AuthorizeController {
    * POST /authorize
    */
   @Post()
-  authorizePost(): Observable<string> {
-    return new Observable(subscriber => {
-      subscriber.next('authorize post');
-      subscriber.complete();
+  async authorizePost(@Res() res: Response): Promise<string> {
+    return await new Promise<string>(() => {
+      res.status(HttpStatus.OK).send({ message: 'authorize post' });
     });
   }
 }

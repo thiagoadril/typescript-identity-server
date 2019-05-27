@@ -1,8 +1,22 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Res,
+  HttpStatus,
+  Body,
+  Param,
+  UsePipes,
+  Query,
+} from '@nestjs/common';
 import { OAuthService } from '../services/oauth.service';
-import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { ApiUseTags } from '@nestjs/swagger';
+import { Response } from 'express';
+import { UserCreateDto } from '../dtos/account/user-create.dto';
+import { UserAuthDto } from '../dtos/auth/user-auth.dto';
+import { createHttpExceptionBody } from '@nestjs/common/utils/http-exception-body.util';
+import { ValidationEntityPipe } from '../../../core/pipes/ValidationEntityPipe';
 
 @ApiUseTags('Auth')
 @Controller('auth')
@@ -15,21 +29,57 @@ export class AuthController {
   /**
    * GET /identity
    */
-  @Get()
-  authGet(): Observable<string> {
-    return new Observable(subscriber => {
-      subscriber.next('identity get');
-      subscriber.complete();
-    });
-  }
-
-  /**  * POST /identity
-   */
   @Post()
-  authPost(): Observable<string> {
-    return new Observable(subscriber => {
-      subscriber.next('identity post');
-      subscriber.complete();
+  @UsePipes(new ValidationEntityPipe())
+  async authPost(
+    @Query() userAuth: UserAuthDto,
+    @Res() res: Response,
+  ): Promise<UserCreateDto> {
+    return new Promise<any>(async () => {
+      this.authService
+        .hasUsername(userAuth.username)
+        .then(found => {
+          if (!found) {
+            res
+              .status(HttpStatus.UNAUTHORIZED)
+              .send(
+                createHttpExceptionBody(
+                  `invalid credentials`,
+                  'unauthorized',
+                  HttpStatus.UNAUTHORIZED,
+                ),
+              );
+          } else {
+            this.authService
+              .authenticate(userAuth.username, userAuth.password)
+              .then(valid => {
+                if (!valid) {
+                  res
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .send(
+                      createHttpExceptionBody(
+                        `invalid credentials`,
+                        'unauthorized',
+                        HttpStatus.UNAUTHORIZED,
+                      ),
+                    );
+                } else {
+                  res.status(HttpStatus.OK).send(userAuth);
+                }
+              });
+          }
+        })
+        .catch(err => {
+          res
+            .status(HttpStatus.BAD_REQUEST)
+            .send(
+              createHttpExceptionBody(err, 'failure', HttpStatus.BAD_REQUEST),
+            );
+        });
+    }).catch(err => {
+      res
+        .status(HttpStatus.BAD_REQUEST)
+        .send(createHttpExceptionBody(err, 'failure', HttpStatus.BAD_REQUEST));
     });
   }
 
@@ -37,10 +87,9 @@ export class AuthController {
    * GET /identity/logout
    */
   @Get('logout')
-  authLogoutGet(): Observable<string> {
-    return new Observable(subscriber => {
-      subscriber.next('identity logout get');
-      subscriber.complete();
+  async authLogoutGet(@Res() res: Response): Promise<string> {
+    return await new Promise<string>(() => {
+      res.status(HttpStatus.OK).send({ message: 'identity logout' });
     });
   }
 }

@@ -4,8 +4,6 @@ import { OAuthUserRepository } from '../repositories/oauth-user.repository';
 import { OAuthAccessTokenRepository } from '../repositories/oauth-access-token.repository';
 import { OAuthAuthorizationCodesRepository } from '../repositories/oauth-authorization-codes.repository';
 import { OAuthRefreshTokensRepository } from '../repositories/oauth-refresh-tokens.repository';
-import { PhotoDto } from '../../photo/photo.dto';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class OAuthService {
@@ -24,14 +22,4 @@ export class OAuthService {
     private readonly refreshTokens: OAuthRefreshTokensRepository,
     private readonly authorizationCodes: OAuthAuthorizationCodesRepository,
   ) {}
-
-  /**
-   * all photos
-   */
-  get allPhotos(): Observable<PhotoDto[]> {
-    return new Observable<PhotoDto[]>(subscriber => {
-      subscriber.next([]);
-      subscriber.complete();
-    });
-  }
 }

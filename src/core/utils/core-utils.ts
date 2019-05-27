@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { LoaderService } from '../../modules/loader/loader.service';
+import { LoaderService } from '../loader/loader.service';
 
 export default class CoreUtils {
   public static PrintConfigurations(configService: LoaderService) {

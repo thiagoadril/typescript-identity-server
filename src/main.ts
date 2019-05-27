@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './modules/app/app.module';
-import { LoaderService } from './modules/loader/loader.service';
+import { AppModule } from './core/app/app.module';
+import { LoaderService } from './core/loader/loader.service';
 import { Logger } from '@nestjs/common';
 import {
   FastifyAdapter,
@@ -39,8 +39,6 @@ async function buildServer(configService: LoaderService) {
    * Configuration Fields
    */
   const name: string = configService.apiConfig.name;
-  const enableAuth: boolean = configService.apiConfig.authEnable;
-  const env: string = configService.apiConfig.environment;
   const port: number = configService.apiConfig.port;
   const enableCors: boolean = configService.apiConfig.corsEnable;
   const swaggerTitle: string = configService.swaggerConfig.swaggerTitle;

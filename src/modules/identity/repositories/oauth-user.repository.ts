@@ -1,6 +1,6 @@
 import { Client, types } from 'cassandra-driver';
-import { InjectConnection } from '../../../database/core/cassandra/common';
-import { OAuthUser } from '../entities/oauth-user';
+import { InjectConnection } from '../../../database/cassandra/common';
+import { OAuthUser } from '../models/oauth-user';
 import ResultSet = types.ResultSet;
 
 export class OAuthUserRepository {
@@ -11,7 +11,10 @@ export class OAuthUserRepository {
    * @param userId
    */
   find(userId: string): Promise<ResultSet> {
-    return this.client.execute('QUERY_SQL');
+    const query = 'SELECT * FROM oauth_users WHERE user_id=?';
+    return this.client.execute(query, [userId], {
+      prepare: true,
+    });
   }
 
   /**
@@ -19,7 +22,19 @@ export class OAuthUserRepository {
    * @param username
    */
   findByUsername(username: string): Promise<ResultSet> {
-    const query = 'SELECT username FROM oauth_users WHERE username=?';
+    const query =
+      'SELECT user_id, name, username, verified FROM oauth_users WHERE username=?';
+    return this.client.execute(query, [username], {
+      prepare: true,
+    });
+  }
+
+  /**
+   * Found credentials
+   * @param username
+   */
+  findCredendialsByUsername(username: string): Promise<ResultSet> {
+    const query = 'SELECT username, password FROM oauth_users WHERE username=?';
     return this.client.execute(query, [username], {
       prepare: true,
     });

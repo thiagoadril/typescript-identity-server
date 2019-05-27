@@ -1,4 +1,4 @@
-import { CassandraModuleOptions, CassandraOptionsFactory } from '../../database/core/cassandra/interfaces';
+import { CassandraModuleOptions, CassandraOptionsFactory } from '../../database/cassandra/interfaces';
 import { LoaderService } from './loader.service';
 import { Injectable } from '@nestjs/common';
 import { auth } from 'cassandra-driver';

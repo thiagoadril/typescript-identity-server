@@ -1,6 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { CassandraCoreModule } from './cassandra.core.module';
-import { LoaderService } from '../../../modules/loader/loader.service';
+import { LoaderService } from '../../core/loader/loader.service';
 
 @Module({})
 export class CassandraModule {

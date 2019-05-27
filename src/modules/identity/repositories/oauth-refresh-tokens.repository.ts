@@ -1,5 +1,5 @@
 import { Client, types } from 'cassandra-driver';
-import { InjectConnection } from '../../../database/core/cassandra/common';
+import { InjectConnection } from '../../../database/cassandra/common';
 import ResultSet = types.ResultSet;
 
 export class OAuthRefreshTokensRepository {

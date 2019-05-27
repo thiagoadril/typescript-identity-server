@@ -1,7 +1,7 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, HttpStatus, Res } from '@nestjs/common';
 import { OAuthService } from '../services/oauth.service';
-import { Observable } from 'rxjs';
 import { ApiUseTags } from '@nestjs/swagger';
+import { Response } from 'express';
 
 @ApiUseTags('Token')
 @Controller('token')
@@ -12,10 +12,9 @@ export class TokenController {
    * POST /token
    */
   @Post()
-  tokenPost(): Observable<string> {
-    return new Observable(subscriber => {
-      subscriber.next('token post');
-      subscriber.complete();
+  async tokenPost(@Res() res: Response): Promise<string> {
+    return await new Promise<string>(() => {
+      res.status(HttpStatus.OK).send({ message: 'token post' });
     });
   }
 
@@ -23,10 +22,9 @@ export class TokenController {
    * GET /token/revoke
    */
   @Get('revoke')
-  tokenRevokeGet(): Observable<string> {
-    return new Observable(subscriber => {
-      subscriber.next('token revoke get');
-      subscriber.complete();
+  async tokenRevokeGet(@Res() res: Response): Promise<string> {
+    return await new Promise<string>(() => {
+      res.status(HttpStatus.OK).send({ message: 'token revoke get' });
     });
   }
 
@@ -34,10 +32,9 @@ export class TokenController {
    * GET /token/receive
    */
   @Get('receive')
-  tokenReceiveGet(): Observable<string> {
-    return new Observable(subscriber => {
-      subscriber.next('token receive get');
-      subscriber.complete();
+  async tokenReceiveGet(@Res() res: Response): Promise<string> {
+    return await new Promise<string>(() => {
+      res.status(HttpStatus.OK).send({ message: 'token receive get' });
     });
   }
 }

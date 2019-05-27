@@ -1,7 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Res } from '@nestjs/common';
 import { OAuthService } from '../services/oauth.service';
-import { Observable } from 'rxjs';
 import { ApiUseTags } from '@nestjs/swagger';
+import { Response } from 'express';
 
 @ApiUseTags('Info')
 @Controller('info')
@@ -12,21 +12,19 @@ export class InfoController {
    * GET /info/sso
    */
   @Get('sso')
-  infoSSOGet(): Observable<string> {
-    return new Observable(subscriber => {
-      subscriber.next('info sso get');
-      subscriber.complete();
+  async infoSSOGet(@Res() res: Response): Promise<string> {
+    return await new Promise<string>(() => {
+      res.status(HttpStatus.OK).send({ message: 'info sso get' });
     });
   }
 
   /**
-   * GET /info/sso
+   * GET /info/user
    */
   @Get('user')
-  infoUserGet(): Observable<string> {
-    return new Observable(subscriber => {
-      subscriber.next('info user get');
-      subscriber.complete();
+  async infoUserGet(@Res() res: Response): Promise<string> {
+    return await new Promise<string>(() => {
+      res.status(HttpStatus.OK).send({ message: 'info user get' });
     });
   }
 
@@ -34,21 +32,19 @@ export class InfoController {
    * GET /info/client
    */
   @Get('client')
-  infoClientGet(): Observable<string> {
-    return new Observable(subscriber => {
-      subscriber.next('info client get');
-      subscriber.complete();
+  async infoClientGet(@Res() res: Response): Promise<string> {
+    return await new Promise<string>(() => {
+      res.status(HttpStatus.OK).send({ message: 'info client get' });
     });
   }
 
   /**
-   * GET /info/client
+   * GET /info/token
    */
   @Get('token')
-  infoTokenGet(): Observable<string> {
-    return new Observable(subscriber => {
-      subscriber.next('info token get');
-      subscriber.complete();
+  async infoTokenGet(@Res() res: Response): Promise<string> {
+    return await new Promise<string>(() => {
+      res.status(HttpStatus.OK).send({ message: 'info token get' });
     });
   }
 }

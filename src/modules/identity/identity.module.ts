@@ -11,6 +11,7 @@ import { TokenController } from './controllers/token.controller';
 import { InfoController } from './controllers/info.controller';
 import { AuthService } from './services/auth.service';
 import { AccountController } from './controllers/account.controller';
+import { CryptoService } from './services/crypto.service';
 
 @Module({
   imports: [],
@@ -28,6 +29,7 @@ import { AccountController } from './controllers/account.controller';
     OAuthRefreshTokensRepository,
     OAuthAuthorizationCodesRepository,
     OAuthService,
+    CryptoService,
     AuthService,
   ],
 })

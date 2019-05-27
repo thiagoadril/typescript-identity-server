@@ -1,4 +1,9 @@
-import { ArgumentMetadata, Injectable, PipeTransform, UnprocessableEntityException } from '@nestjs/common';
+import {
+  ArgumentMetadata,
+  Injectable,
+  PipeTransform,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 
@@ -16,18 +21,21 @@ export class ValidationEntityPipe implements PipeTransform<any> {
     }
     const object = plainToClass(metatype, value);
     const errors = await validate(object, { skipMissingProperties: this.skip });
+
     if (errors.length > 0) {
-      const errorList = [];
+      const errorList = {
+        errors: [],
+      };
+
       errors.map(err => {
         if (err.constraints !== null) {
           const constraintValues = Object.values(err.constraints);
           if (constraintValues != null && constraintValues.length > 0) {
-            constraintValues.map(message => {
-              errorList.push({ [err.property]: message });
-            });
+            errorList.errors.push({ [err.property]: constraintValues[0] });
           }
         }
       });
+
       throw new UnprocessableEntityException(errorList);
     }
     return value;

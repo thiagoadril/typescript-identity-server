@@ -1,8 +1,21 @@
-import { DynamicModule, Global, Inject, Module, Provider } from '@nestjs/common';
+import {
+  DynamicModule,
+  Global,
+  Inject,
+  Module,
+  Provider,
+} from '@nestjs/common';
 import { defer } from 'rxjs';
 import { getConnectionToken } from './common';
-import { CassandraModuleAsyncOptions, CassandraModuleOptions, CassandraOptionsFactory } from './interfaces';
-import { CASSANDRA_CONNECTION_NAME, CASSANDRA_MODULE_OPTIONS } from './cassandra.constants';
+import {
+  CassandraModuleAsyncOptions,
+  CassandraModuleOptions,
+  CassandraOptionsFactory,
+} from './interfaces';
+import {
+  CASSANDRA_CONNECTION_NAME,
+  CASSANDRA_MODULE_OPTIONS,
+} from './cassandra.constants';
 import { Client } from 'cassandra-driver';
 
 @Global()
@@ -30,6 +43,7 @@ export class CassandraCoreModule {
       },
       inject: [CASSANDRA_MODULE_OPTIONS],
     };
+
     return {
       module: CassandraCoreModule,
       imports: options.imports,

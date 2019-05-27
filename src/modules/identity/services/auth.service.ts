@@ -1,24 +1,51 @@
 import { Injectable } from '@nestjs/common';
 import { OAuthUserRepository } from '../repositories/oauth-user.repository';
-import { Observable } from 'rxjs';
-import { OAuthUser } from '../entities/oauth-user';
+import { OAuthUser } from '../models/oauth-user';
 import { UserCreateDto } from '../dtos/account/user-create.dto';
+import { CryptoService } from './crypto.service';
+import { types } from 'cassandra-driver';
+import Row = types.Row;
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly users: OAuthUserRepository) {}
+  constructor(
+    private readonly users: OAuthUserRepository,
+    private readonly cryptoService: CryptoService,
+  ) {}
 
-  existsUsername(username: string): Observable<boolean> {
-    return new Observable(subscriber => {
-      this.users.findByUsername(username).then(value => {
-        console.log(value);
-        if (value.rows.length > 0) {
-          subscriber.next(true);
-        } else {
-          subscriber.next(false);
-        }
-        subscriber.complete();
-      });
+  hasUsername(username: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      this.users
+        .findByUsername(username)
+        .then(value => {
+          resolve(value.rows.length > 0 ? true : false);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  authenticate(username: string, password: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      this.users
+        .findCredendialsByUsername(username)
+        .then(value => {
+          const row = value.first();
+          if (row === null) {
+            return resolve(false);
+          }
+
+          if (row !== null) {
+            this.cryptoService
+              .compare(password, row.password)
+              .then(valid => {
+                resolve(valid ? true : false);
+              })
+              .catch(error => reject(error));
+          } else {
+            resolve(false);
+          }
+        })
+        .catch(error => reject(error));
     });
   }
 
@@ -26,23 +53,23 @@ export class AuthService {
    * Save user by UserCreateDto
    * @param u
    */
-  save(u: UserCreateDto): Observable<OAuthUser> {
-    return new Observable(subscriber => {
-      const user = new OAuthUser(u.name, u.username, u.password);
-      this.users
-        .save(user)
-        .then(value => {
-          if (value.wasApplied()) {
-            subscriber.next(user);
-          } else {
-            subscriber.error('failure save');
-          }
+  save(u: UserCreateDto): Promise<OAuthUser> {
+    return new Promise<OAuthUser>((resolve, reject) => {
+      this.cryptoService
+        .build(u.password)
+        .then(pwd => {
+          const user = new OAuthUser(u.name, u.username, pwd.hash);
+          this.users
+            .save(user)
+            .then(saved => {
+              saved.wasApplied() ? resolve(user) : reject();
+            })
+            .catch(err => {
+              reject(err);
+            });
         })
-        .catch(reason => {
-          subscriber.error(reason);
-        })
-        .finally(() => {
-          subscriber.complete();
+        .catch(err => {
+          reject(err);
         });
     });
   }
