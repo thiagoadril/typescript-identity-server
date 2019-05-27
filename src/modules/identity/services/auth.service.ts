@@ -26,26 +26,16 @@ export class AuthService {
 
   authenticate(username: string, password: string): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
-      this.users
-        .findCredendialsByUsername(username)
-        .then(value => {
-          const row = value.first();
-          if (row === null) {
-            return resolve(false);
-          }
-
-          if (row !== null) {
-            this.cryptoService
-              .compare(password, row.password)
-              .then(valid => {
-                resolve(valid ? true : false);
-              })
-              .catch(error => reject(error));
-          } else {
-            resolve(false);
-          }
-        })
-        .catch(error => reject(error));
+      this.users.findCredendialsByUsername(username).then(value => {
+        const row = value.first();
+        if (row === null) {
+          return resolve(false);
+        } else {
+          this.cryptoService.compare(password, row.password).then(valid => {
+            resolve(valid ? true : false);
+          });
+        }
+      });
     });
   }
 
